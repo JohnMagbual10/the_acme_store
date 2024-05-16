@@ -4,30 +4,46 @@ const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 
 const createTables = async()=> {
-  const SQL = `
-    DROP TABLE IF EXISTS products;
-    DROP TABLE IF EXISTS users;
-    DROP TABLE IF EXISTS favorites;
-    CREATE TABLE users(
-      id UUID PRIMARY KEY,
-      username VARCHAR(20) NOT NULL UNIQUE,
-      password VARCHAR(255) NOT NULL
-    );
-    CREATE TABLE favorites(
-      id UUID PRIMARY KEY,
-      name VARCHAR(100) NOT NULL UNIQUE
-    );
-    CREATE TABLE user_favorites(
-      id UUID PRIMARY KEY,
-      user_id UUID REFERENCES users(id) NOT NULL,
-      skill_id UUID REFERENCES favorites(id) NOT NULL,
-      CONSTRAINT unique_user_id_favorites_id UNIQUE (user_id, favorite_id)
-    );
-  `;
-  await client.query(SQL);
+    //not shown
+  };
+  
+  const createUser = async({ username, password })=> {
+    const SQL = `
+      INSERT INTO users(id, username, password) VALUES($1, $2, $3) RETURNING *
+    `;
+    const response = await client.query(SQL, [uuid.v4(), username, password]);
+    return response.rows[0];
+  }
+  
+  const createFavorites = async({ name })=> {
+    const SQL = `
+      INSERT INTO Favorites(id, name) VALUES($1, $2) RETURNING *
+    `;
+    const response = await client.query(SQL, [uuid.v4(), name]);
+    return response.rows[0];
+  }
 
-};
-
-module.exports = {
-    client
-    };
+  const fetchUsers = async()=> {
+    const SQL = `
+      SELECT * FROM users;
+    `;
+    const response = await client.query(SQL);
+    return response.rows;
+  }
+  
+  const fetchFavorites = async()=> {
+    const SQL = `
+      SELECT * FROM skills;
+    `;
+    const response = await client.query(SQL);
+    return response.rows;
+  }
+  
+  
+  
+  module.exports = {
+    client,
+    createTables,
+    createUser,
+    createFavorites
+  };
