@@ -1,5 +1,13 @@
+//server/index.js
+const { client, createTables } = require('./db');
+
 const init = async()=> {
-    //get client by requiring from db.js and connect
-  }
-  init();
+  await client.connect();
+  console.log('connected to database');
+  await createTables();
+  console.log('tables created');
+};
+
+init();
+
              
