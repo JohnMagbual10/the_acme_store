@@ -41,6 +41,34 @@ app.get('/api/users', async (req, res, next) => {
       next(ex);
     }
   });
+
+  app.get('/api/users/:id/userFavorites', async(req, res, next)=> {
+    try {
+      res.send(await fetchUserFavorites(req.params.id));
+    }
+    catch(ex){
+      next(ex);
+    }
+  });
+
+  app.post('/api/users/:id/userFavorites', async(req, res, next)=> {
+    try {
+      res.status(201).send(await createUserFavorites({ user_id: req.params.id, favorites_id: req.body.favorites_id}));
+    }
+    catch(ex){
+      next(ex);
+    }
+  });
+
+  app.delete('/api/users/:userId/userFavorites/:id', async(req, res, next)=> {
+    try {
+      await deleteUserFavorites({ id: req.params.id, user_id: req.params.userId });
+      res.sendStatus(204);
+    }
+    catch(ex){
+      next(ex);
+    }
+  });
   
   
   const init = async()=> {
@@ -74,6 +102,8 @@ app.get('/api/users', async (req, res, next) => {
     await deleteUserFavorites(userFavorites[0].id);
     console.log (await fetchUserFavorites(moe.id));
   };
+
+  console.log(`CURL localhost:3000/api/users/${lucy.id}/userFavorites`);
 
   const port = process.env.PORT || 3000;
   app.listen(port, ()=> console.log(`listening on port ${port}`));
