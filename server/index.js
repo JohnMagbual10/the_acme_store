@@ -1,16 +1,5 @@
-//server/index.js
-const { fetchUsers } = require('../../../../B35GP/acme_talent_agency/Server/db');
-const {
-    client,
-    createTables,
-    createUser,
-    createFavorites,
-    createUserFavorites,
-    fetchUsers,
-    fetchFavorites,
-    fetchUserFavorites
-  } = require('./db');
-  const express = require('express');
+const { client, createTables, createUser, createFavorites, createUserFavorites, fetchFavorites, fetchUserFavorites, deleteUserFavorites } = require('./db');
+const express = require('express');
 const app = express();
 
 app.get('/api/users', async (req, res, next) => {
@@ -72,10 +61,13 @@ app.get('/api/users', async (req, res, next) => {
   
   
   const init = async()=> {
+    
     await client.connect();
     console.log('connected to database');
     await createTables();
+    
     console.log('tables created');
+    
     const [moe, lucy, ethyl, singing, dancing, juggling, plateSpinning] = await Promise.all([
       createUser({ username: 'moe', password: 's3cr3t' }),
       createUser({ username: 'lucy', password: 's3cr3t!!' }),
@@ -85,6 +77,7 @@ app.get('/api/users', async (req, res, next) => {
       createFavorites({ name: 'juggling'}),
       createFavorites({ name: 'plate spinning'}),
     ]);
+    
     const users = await fetchUsers();
     console.log(users);
   
@@ -103,12 +96,8 @@ app.get('/api/users', async (req, res, next) => {
     console.log (await fetchUserFavorites(moe.id));
   };
 
-  console.log(`CURL localhost:3000/api/users/${lucy.id}/userFavorites`);
-
   const port = process.env.PORT || 3000;
   app.listen(port, ()=> console.log(`listening on port ${port}`));
 
   
   init();
-
-             
