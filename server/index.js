@@ -10,6 +10,38 @@ const {
     fetchFavorites,
     fetchUserFavorites
   } = require('./db');
+  const express = require('express');
+const app = express();
+
+app.get('/api/users', async (req, res, next) => {
+    try {
+      const users = await fetchUsers();
+      res.send(users);
+    } catch (ex) {
+      next(ex);
+    }
+  });
+  
+  app.get('/api/products', async (req, res, next) => {
+    try {
+      // Assuming you have a function fetchProducts() to retrieve products
+      const products = await fetchProducts();
+      res.send(products);
+    } catch (ex) {
+      next(ex);
+    }
+  });
+  
+  app.get('/api/users/:id/favorites', async (req, res, next) => {
+    try {
+      // Assuming you have a function fetchFavoritesByUserId(userId) to retrieve favorites by user ID
+      const favorites = await fetchFavoritesByUserId(req.params.id);
+      res.send(favorites);
+    } catch (ex) {
+      next(ex);
+    }
+  });
+  
   
   const init = async()=> {
     await client.connect();
@@ -42,6 +74,10 @@ const {
     await deleteUserFavorites(userFavorites[0].id);
     console.log (await fetchUserFavorites(moe.id));
   };
+
+  const port = process.env.PORT || 3000;
+  app.listen(port, ()=> console.log(`listening on port ${port}`));
+
   
   init();
 
