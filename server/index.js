@@ -60,21 +60,20 @@ const init = async () => {
   await createTables();
   console.log('Tables created');
 
-  const [moe, lucy, ethyl, singing, dancing, juggling, plateSpinning] = await Promise.all([
-    createUser({ username: 'moe', password: 's3cr3t' }),
-    createUser({ username: 'lucy', password: 's3cr3t!!' }),
-    createUser({ username: 'ethyl', password: 'shhh' }),
-    createProduct({ name: 'singing' }),
-    createProduct({ name: 'dancing' }),
-    createProduct({ name: 'juggling' }),
-    createProduct({ name: 'plate spinning' }),
+  const [xiaojia, john, alice, apple, oranges, plums] = await Promise.all([
+    createUser({ username: 'xiaojia', password: 's3cr3t' }),
+    createUser({ username: 'john', password: 's3cr3t!!' }),
+    createUser({ username: 'alice', password: 'shhh' }),
+    createProduct({ name: 'Apple' }),
+    createProduct({ name: 'Oranges' }),
+    createProduct({ name: 'Plums' }),
   ]);
 
   const userFavorites = await Promise.all([
-    createFavorite({ user_id: moe.id, product_id: plateSpinning.id }),
-    createFavorite({ user_id: moe.id, product_id: juggling.id }),
-    createFavorite({ user_id: ethyl.id, product_id: juggling.id }),
-    createFavorite({ user_id: lucy.id, product_id: dancing.id }),
+    createFavorite({ user_id: xiaojia.id, product_id: apple.id }),
+    createFavorite({ user_id: xiaojia.id, product_id: oranges.id }),
+    createFavorite({ user_id: alice.id, product_id: oranges.id }),
+    createFavorite({ user_id: john.id, product_id: plums.id }),
   ]);
 
   console.log('User favorites created:', userFavorites);
@@ -85,11 +84,11 @@ const init = async () => {
   const favorites = await fetchFavorites();
   console.log('Favorites:', favorites);
 
-  const userFavoritesData = await fetchUserFavorites(moe.id);
+  const userFavoritesData = await fetchUserFavorites(xiaojia.id);
   console.log('User favorites:', userFavoritesData);
 
   await deleteUserFavorites(userFavorites[0].id);
-  console.log('User favorites after deletion:', await fetchUserFavorites(moe.id));
+  console.log('User favorites after deletion:', await fetchUserFavorites(xiaojia.id));
 };
 
 const port = process.env.PORT || 3000;

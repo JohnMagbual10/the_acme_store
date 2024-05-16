@@ -4,6 +4,28 @@ const client = new pg.Client(process.env.DATABASE_URL || 'postgres://localhost/t
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 
+// Database Schema:
+// users table:
+//   id (UUID) PRIMARY KEY
+//   username (VARCHAR(20)) NOT NULL UNIQUE
+//   password (VARCHAR(255)) NOT NULL
+
+// products table:
+//   id (UUID) PRIMARY KEY
+//   name (VARCHAR(100)) NOT NULL UNIQUE
+
+// favorites table:
+//   id (UUID) PRIMARY KEY
+//   user_id (UUID) REFERENCES users(id) NOT NULL
+//   product_id (UUID) REFERENCES products(id) NOT NULL
+//   CONSTRAINT unique_user_id_product_id UNIQUE (user_id, product_id)
+
+// user_favorites table:
+//   id (UUID) PRIMARY KEY
+//   user_id (UUID) REFERENCES users(id) NOT NULL
+//   favorite_id (UUID) REFERENCES favorites(id) NOT NULL
+//   CONSTRAINT unique_user_id_favorite_id UNIQUE (user_id, favorite_id)
+
 const createTables = async () => {
   const SQL = `
     DROP TABLE IF EXISTS user_favorites;
