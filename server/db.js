@@ -38,8 +38,15 @@ const createTables = async()=> {
     const response = await client.query(SQL);
     return response.rows;
   }
-  
-  
+
+  const fetchUserFavorites = async(id)=> {
+    const SQL = `
+      SELECT * FROM user_favorites
+      WHERE user_id = $1
+    `;
+    const response = await client.query(SQL, [ id ]);
+    return response.rows;
+  }
   
   module.exports = {
     client,
@@ -47,5 +54,7 @@ const createTables = async()=> {
     createUser,
     createSkill,
     fetchUsers,
-    fetchFavorites
+    fetchFavorites,
+    fetchUserFavorites,
+    createUserFavorites
   };

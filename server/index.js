@@ -5,6 +5,7 @@ const {
     createTables,
     createUser,
     createFavorites,
+    createUserFavorites,
     fetchUsers,
     fetchFavorites
   } = require('./db');
@@ -24,11 +25,19 @@ const {
       createFavorites({ name: 'plate spinning'}),
     ]);
     const users = await fetchUsers();
-  console.log(users);
-
-  const skills = await fetchFavorites();
-  console.log(Favorites);
+    console.log(users);
   
+    const skills = await fetchFavorites();
+    console.log(skills);
+  
+    const userSkills = await Promise.all([
+      createUserFavorites({ user_id: moe.id, favorites_id: plateSpinning.id}),
+      createUserFavorites({ user_id: moe.id, favorites_id: juggling.id}),
+      createUserFavorites({ user_id: ethyl.id, favorites_id: juggling.id}),
+      createUserFavorites({ user_id: lucy.id, favorites_id: dancing.id}),
+    ]);
+  
+    console.log(await fetchUserFavorites(moe.id));
   };
   
   init();
