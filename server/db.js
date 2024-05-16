@@ -11,7 +11,7 @@ const createTables = async()=> {
     const SQL = `
       INSERT INTO users(id, username, password) VALUES($1, $2, $3) RETURNING *
     `;
-    const response = await client.query(SQL, [uuid.v4(), username, password]);
+    const response = await client.query(SQL, [uuid.v4(), username, await bcrypt.hash(password, 5)]);
     return response.rows[0];
   }
   
@@ -45,5 +45,7 @@ const createTables = async()=> {
     client,
     createTables,
     createUser,
-    createFavorites
+    createSkill,
+    fetchUsers,
+    fetchFavorites
   };
