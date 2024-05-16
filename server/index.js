@@ -7,7 +7,8 @@ const {
     createFavorites,
     createUserFavorites,
     fetchUsers,
-    fetchFavorites
+    fetchFavorites,
+    fetchUserFavorites
   } = require('./db');
   
   const init = async()=> {
@@ -27,10 +28,10 @@ const {
     const users = await fetchUsers();
     console.log(users);
   
-    const skills = await fetchFavorites();
-    console.log(skills);
+    const Favorites = await fetchFavorites();
+    console.log(Favorites);
   
-    const userSkills = await Promise.all([
+    const userFavorites = await Promise.all([
       createUserFavorites({ user_id: moe.id, favorites_id: plateSpinning.id}),
       createUserFavorites({ user_id: moe.id, favorites_id: juggling.id}),
       createUserFavorites({ user_id: ethyl.id, favorites_id: juggling.id}),
@@ -38,6 +39,8 @@ const {
     ]);
   
     console.log(await fetchUserFavorites(moe.id));
+    await deleteUserFavorites(userFavorites[0].id);
+    console.log (await fetchUserFavorites(moe.id));
   };
   
   init();

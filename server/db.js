@@ -23,6 +23,14 @@ const createTables = async()=> {
     return response.rows[0];
   }
 
+  const createUserFavorites = async({ user_id, skill_id })=> {
+    const SQL = `
+      INSERT INTO user_skills(id, user_id, skill_id) VALUES($1, $2, $3) RETURNING *
+    `;
+    const response = await client.query(SQL, [uuid.v4(), user_id, skill_id]);
+    return response.rows[0];
+  }
+
   const fetchUsers = async()=> {
     const SQL = `
       SELECT * FROM users;
@@ -57,4 +65,5 @@ const createTables = async()=> {
     fetchFavorites,
     fetchUserFavorites,
     createUserFavorites
+    deleteUserFavorites
   };
